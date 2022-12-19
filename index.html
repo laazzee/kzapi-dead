@@ -1,0 +1,94 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/x-icon" href="/img/kreedz.ico">
+    <title>KZ-API DEAD Time Count</title>
+    <style>
+        body {
+            background: transparent;
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%;
+            color: white;
+            text-shadow: 1px 1px 2px black;
+        }
+
+        #main {
+            height: 100vh;
+            background: linear-gradient(180deg, rgba(223, 0, 0, 1) 0%, rgba(254, 143, 0, 1) 20%, rgba(255, 255, 0, 1) 40%, rgba(0, 152, 27, 1) 60%, rgba(0, 67, 255, 1) 78%, rgba(109, 0, 129, 1) 100%);
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+            flex-wrap: wrap;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        #msg {
+            font-size: 80px;
+            text-align: center;
+            position: relative;
+            z-index: 3;
+        }
+
+        #time {
+            text-align: center;
+            font-size: 60px;
+            margin-top: 20px;
+            z-index: 3;
+        }
+
+        #pepa {
+            width: 30%;
+            left: 55%;
+            height: auto;
+            position: absolute;
+            z-index: 2;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="main">
+        <img id="pepa" src="img/pepeclown.png" alt="">
+        <div id="msg">KZ API<br>down for</div>
+        <div id="time"></div>
+    </div>
+    <script>
+        // Set the date we're counting down to
+        var countDownDate = new Date("Dec 14, 2022 20:06:0").getTime();
+
+        // Update the count down every 1 second
+        var x = setInterval(function () {
+
+            // Get today's date and time
+            var now = new Date().getTime();
+
+            // Find the distance between now and the count down date
+            var distance = now - countDownDate;
+
+            // Time calculations for days, hours, minutes and seconds
+            var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            // Output the result in an element with id="demo"
+            document.getElementById("time").innerHTML = days + "d " + hours + "h "
+                + minutes + "m " + seconds + "s ";
+
+            // If the count down is over, write some text 
+            if (distance < 0) {
+                clearInterval(x);
+                document.getElementById("time").innerHTML = "EXPIRED";
+            }
+        }, 1000);
+    </script>
+
+</body>
+
+</html>
