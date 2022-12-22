@@ -76,7 +76,12 @@
 
 <body>
     <div id="main">
-        <img id="pepa" src="img/pepeclown.png" alt="">
+        <img id="pepa" src="img/pepeclown.png" usemap="#nose">
+
+        <map name="nose">
+            <area shape="circle" coords="278,270,50" onclick="pepeLaught()" href="#" alt="secret :D">
+        </map>
+
         <div id="comment">Sorry.. but I won't count this today's (Dec 22) morning 12 min weakness from API</div>
         <div id="msg">KZ API<br>down for</div>
         <div id="time"></div>
@@ -93,6 +98,14 @@
             document.getElementById("time").innerHTML = days + "d " + hours + "h "
                 + minutes + "m " + seconds + "s ";
         }, 1000);
+
+
+        let audio = new Audio("sound/ohnonono.mp3");
+
+        function pepeLaught() {
+            audio.volume = 0.8;
+            audio.play();
+        }
     </script>
 
 </body>
