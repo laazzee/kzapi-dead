@@ -70,8 +70,15 @@
             height: auto;
             position: absolute;
             z-index: 2;
+            /* border: 1px solid black; */
+        }
+
+        map area:hover {
+            cursor: pointer;
         }
     </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <script src="./js/imageMapResizer.min.js"></script>
 </head>
 
 <body>
@@ -79,13 +86,16 @@
         <img id="pepa" src="img/pepeclown.png" usemap="#nose">
 
         <map name="nose">
-            <area shape="circle" coords="278,270,50" onclick="pepeLaught()" href="#" alt="secret :D">
+            <area shape="circle" coords="1388,1368,200" onclick="pepeLaught()" alt="secret :D">
+            <!-- <area shape="circle" coords="0,0,50" onclick="pepeLaught()" href="#" alt="secret :D"> -->
         </map>
 
         <div id="comment">Sorry.. but I won't count this today's (Dec 22) morning 12 min weakness from API</div>
         <div id="msg">KZ API<br>down for</div>
         <div id="time"></div>
     </div>
+
+
     <script>
         let startDate = new Date("Dec 14, 2022 20:05:45").getTime();
         let x = setInterval(function () {
@@ -106,6 +116,10 @@
             audio.volume = 0.8;
             audio.play();
         }
+
+        $(document).ready(function () {
+            $('map').imageMapResize();
+        });
     </script>
 
 </body>
