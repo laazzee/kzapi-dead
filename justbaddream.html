@@ -131,12 +131,12 @@
         //Add an event listner to the start button
         startbtn.addEventListener("click", () => {
             //Show the loader and hide the button
-            loader.style.display = "";
+            loader.style.display = "flex";
             startbtn.style.display = "none";
             //Wait for the music to start
             music.play().then(() => {
                 //Hide the loader and show the content
-                content.style.display = "";
+                content.style.display = "flex";
                 loader.style.display = "none";
             });
         });
