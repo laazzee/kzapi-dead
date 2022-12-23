@@ -20,7 +20,7 @@
     <meta name="msapplication-TileColor" content="#ffffff">
     <meta name="msapplication-TileImage" content="img/ms-icon-144x144.png?">
     <meta name="theme-color" content="#ffffff">
-    <title>KZ-API DEAD Time Count</title>
+    <title></title>
     <style>
         body {
             background: transparent;
@@ -32,7 +32,7 @@
             text-shadow: 1px 1px 2px black;
         }
 
-        #main {
+        #content {
             height: 100vh;
             background: linear-gradient(180deg, rgba(223, 0, 0, 1) 0%, rgba(254, 143, 0, 1) 20%, rgba(255, 255, 0, 1) 40%, rgba(0, 152, 27, 1) 60%, rgba(0, 67, 255, 1) 78%, rgba(109, 0, 129, 1) 100%);
             display: flex;
@@ -44,8 +44,21 @@
             z-index: 1;
         }
 
+
+        #main {
+            height: 100vh;
+            background: linear-gradient(180deg, rgba(223, 0, 0, 1) 0%, rgba(254, 143, 0, 1) 20%, rgba(255, 255, 0, 1) 40%, rgba(0, 152, 27, 1) 60%, rgba(0, 67, 255, 1) 78%, rgba(109, 0, 129, 1) 100%);
+            display: none;
+            justify-content: center;
+            flex-direction: column;
+            flex-wrap: wrap;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+
         #msg {
-            font-size: 80px;
+            font-size: 60px;
             text-align: center;
             position: relative;
             z-index: 3;
@@ -105,13 +118,12 @@
 
 <body>
     <!-- The actual content, hidden by default -->
-    <div id="main">
+    <div id="content">
         <button id="startbtn">Reveal Truth</button>
-        <div id="content" style="display: none;">
-
-            <img id="pepe" src="img/pepesmile.png">
-            <div id="msg">LUL.. It was just a bad dream... <br>API NEVER WAS DOWN <br> Its alive as never before</div>
-        </div>
+    </div>
+    <div id="main">
+        <img id="pepe" src="img/pepesmile.png">
+        <div id="msg">LUL.. It was just a bad dream... <br>API NEVER WAS DOWN <br> Its alive as never before</div>
     </div>
 
     <!-- This is displayed when the user has pressed the start button, but the music is still loading -->
@@ -127,6 +139,7 @@
         const content = document.getElementById("content");
         const loader = document.getElementById("loader");
         const music = document.getElementById("music");
+        const main = document.getElementById("main");
 
         //Add an event listner to the start button
         startbtn.addEventListener("click", () => {
@@ -136,7 +149,8 @@
             //Wait for the music to start
             music.play().then(() => {
                 //Hide the loader and show the content
-                content.style.display = "flex";
+                content.style.display = "none";
+                main.style.display = "flex";
                 loader.style.display = "none";
             });
         });
