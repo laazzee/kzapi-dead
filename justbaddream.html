@@ -80,57 +80,65 @@
         map area:hover {
             cursor: pointer;
         }
+
+        #startbtn {
+            border: none;
+            background-color: burlywood;
+            color: black;
+            padding: 10px 15px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            /* transition-duration: 0.4s; */
+        }
+
+        #startbtn:hover {
+            cursor: pointer;
+        }
     </style>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
-    <script src="./js/imageMapResizer.min.js"></script>
+
 </head>
 
 <body>
+    <!-- The actual content, hidden by default -->
     <div id="main">
-        <img id="pepe" src="img/pepeclown.png" usemap="#nose">
-        <map name="nose">
-            <area shape="circle" coords="1388,1368,200" onclick="pepeLaught()" alt="secret :D">
-        </map>
-        <div id="comment">Sorry.. but I won't count this today's (Dec 22) morning 12 min weakness from API</div>
-        <div id="msg">KZ API<br>down for</div>
-        <div id="time"></div>
+        <button id="startbtn">Reveal Truth</button>
+        <div id="content" style="display: none;">
+
+            <img id="pepe" src="img/pepesmile.png">
+            <div id="msg">LUL.. It was just a bad dream... <br>API NEVER WAS DOWN <br> Its alive as never before</div>
+        </div>
     </div>
 
+    <!-- This is displayed when the user has pressed the start button, but the music is still loading -->
+    <div id="loader" style="display: none;">
+        <p>Loading ...</p>
+    </div>
+
+    <!-- The music. It is started by the Javascript -->
+    <audio id="music" src="sound/Pepehappy.mp3" style="display: none;" loop></audio>
 
     <script>
-        let startDate = new Date("Dec 14, 2022 20:05:45").getTime();
-        let x = setInterval(function () {
-            let now = new Date().getTime();
-            let distance = now - startDate;
-            let days = Math.floor(distance / (1000 * 60 * 60 * 24));
-            let hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-            let seconds = Math.floor((distance % (1000 * 60)) / 1000);
-            document.getElementById("time").innerHTML = days + "d " + hours + "h "
-                + minutes + "m " + seconds + "s ";
-        }, 1000);
+        const startbtn = document.getElementById("startbtn");
+        const content = document.getElementById("content");
+        const loader = document.getElementById("loader");
+        const music = document.getElementById("music");
 
-
-        let audio = new Audio("sound/ohnonono.mp3");
-
-        function pepeLaught() {
-            audio.volume = 0.8;
-            audio.play();
-        }
-
-        $(document).ready(function () {
-            $('map').imageMapResize();
+        //Add an event listner to the start button
+        startbtn.addEventListener("click", () => {
+            //Show the loader and hide the button
+            loader.style.display = "";
+            startbtn.style.display = "none";
+            //Wait for the music to start
+            music.play().then(() => {
+                //Hide the loader and show the content
+                content.style.display = "";
+                loader.style.display = "none";
+            });
         });
-
-
-        if (true) {
-            // Your application has indicated there's an error
-            window.setTimeout(function () {
-                // Move to a new location or you can do something else
-                window.location.href = "./justbaddream.html";
-            }, 5000);
-        }
     </script>
 
 </body>
