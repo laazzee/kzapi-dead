@@ -92,16 +92,14 @@
         <map name="nose">
             <area shape="circle" coords="1388,1368,200" onclick="pepeLaught()" alt="secret :D">
         </map>
-        <!-- <div id="comment">Sorry.. but I won't count this today's (Dec 22) morning 12 min weakness from API</div> -->
         <div id="msg">KZ API<br>down for</div>
         <div id="time"></div>
     </div>
 
 
     <script>
+        // Checking if website is reachable
         const customLastCheckTime = parseInt(localStorage.getItem('lastCheckTime')) || new Date('Feb 09, 2023 20:43:33').getTime();
-        const timeElement = document.getElementById('time');
-
         const isWebsiteUp = async (url) => {
             const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
             const apiUrl = `https://isitup.org/${url.replace(/^(https?:\/\/)/g, '')}.json`;
@@ -126,6 +124,8 @@
             }
         };
 
+        // Timer
+        const timeElement = document.getElementById('time');
         const updateTimer = () => {
             const startDate = new Date(customLastCheckTime).getTime();
             const now = new Date().getTime();
@@ -137,28 +137,32 @@
             timeElement.innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
         };
 
-        isWebsiteUp('https://kztimerglobal.com').then((result) => {
-            // console.log('Is website up?', result.isUp);
-            // console.log('Custom last check time:', result.customLastCheckTime);
-            if (result.isUp) {
-                // Move to a new location or you can do something else
-                setTimeout(function () {
-                    window.location.href = './justbaddream.html';
-                }, 4000);
+        function checkWebsite() {
+            isWebsiteUp('https://kztimerglobal.com').then((result) => {
+                if (result.isUp == true) {
+                    // Redirect to justbaddream.html after 4 seconds
+                    setTimeout(() => {
+                        window.location.href = './justbaddream.html';
+                    }, 4000);
+                } else {
+                    // Call the function again after a delay of 60 seconds
+                    setTimeout(checkWebsite, 60000);
+                }
+            });
+        }
 
-            }
-        });
+        // Call the checkWebsite function to start the process
+        checkWebsite();
 
         setInterval(updateTimer, 1000);
 
-
-        let audio = new Audio("sound/ohnonono.mp3");
-
         function pepeLaught() {
+            let audio = new Audio("sound/ohnonono.mp3");
             audio.volume = 0.8;
             audio.play();
         }
 
+        // Resize map for nose object
         $(document).ready(function () {
             $('map').imageMapResize();
         });
