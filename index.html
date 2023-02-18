@@ -99,51 +99,57 @@
 
 
     <script>
-        let customLastCheckTime = parseInt(localStorage.getItem('lastCheckTime')) || new Date('Feb 09, 2023 20:43:33').getTime();
+        const customLastCheckTime = parseInt(localStorage.getItem('lastCheckTime')) || new Date('Feb 09, 2023 20:43:33').getTime();
+        const timeElement = document.getElementById('time');
 
-        async function isWebsiteUp(url) {
+        const isWebsiteUp = async (url) => {
             const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
-            const apiUrl = `https://isitup.org/${url.replace('https://', '').replace('http://', '')}.json`;
-            const response = await fetch(proxyUrl + apiUrl);
-            const json = await response.json();
-            const currentTime = new Date().getTime();
-            const lastCheckTime = new Date(customLastCheckTime).toISOString();
-            const isUp = json.status_code === 1;
-            customLastCheckTime = isUp ? currentTime : customLastCheckTime;
-            localStorage.setItem('lastCheckTime', customLastCheckTime);
-            if (isUp) {
-                localStorage.setItem(url, currentTime);
+            const apiUrl = `https://isitup.org/${url.replace(/^(https?:\/\/)/g, '')}.json`;
+            try {
+                const response = await fetch(proxyUrl + apiUrl);
+                const json = await response.json();
+                const currentTime = new Date().getTime();
+                const lastCheckTime = new Date(customLastCheckTime).toISOString();
+                const isUp = json.status_code === 1;
+                localStorage.setItem('lastCheckTime', isUp ? currentTime : customLastCheckTime);
+                if (isUp) {
+                    localStorage.setItem(url, currentTime);
+                }
+                return {
+                    isUp,
+                    lastCheckTime,
+                    customLastCheckTime: new Date(customLastCheckTime).toISOString(),
+                };
+            } catch (err) {
+                console.error(`Error checking ${url}: ${err}`);
+                return { isUp: false };
             }
-            return {
-                isUp,
-                lastCheckTime,
-                customLastCheckTime: new Date(parseInt(customLastCheckTime)).toISOString(),
-            };
-        }
+        };
+
+        const updateTimer = () => {
+            const startDate = new Date(customLastCheckTime).getTime();
+            const now = new Date().getTime();
+            const distance = now - startDate;
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+            timeElement.innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+        };
 
         setInterval(() => {
-            isWebsiteUp('https://kztimerglobal.com').then(result => {
+            isWebsiteUp('https://kztimerglobal.com').then((result) => {
                 // console.log('Is website up?', result.isUp);
                 // console.log('Custom last check time:', result.customLastCheckTime);
                 if (result.isUp) {
                     // Move to a new location or you can do something else
-                    window.location.href = "./justbaddream.html";
+                    window.location.href = './justbaddream.html';
                 }
             });
         }, 4000);
 
+        setInterval(updateTimer, 1000);
 
-        let x = setInterval(function () {
-            let startDate = new Date(parseInt(customLastCheckTime)).getTime();
-            let now = new Date().getTime();
-            let distance = now - startDate;
-            let days = Math.floor(distance / (1000 * 60 * 60 * 24));
-            let hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-            let seconds = Math.floor((distance % (1000 * 60)) / 1000);
-            document.getElementById("time").innerHTML = days + "d " + hours + "h "
-                + minutes + "m " + seconds + "s ";
-        }, 1000);
 
         let audio = new Audio("sound/ohnonono.mp3");
 
