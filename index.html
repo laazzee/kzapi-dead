@@ -99,43 +99,42 @@
 
 
     <script>
-        const domain = 'kztimerglobal.com';
-        const timeout = 5000; // 5 seconds
-        const lastReachableKey = `${domain}_lastReachable`;
-        const customLastReachable = new Date('Feb 09, 2023 20:43:33').getTime();
+        let customLastCheckTime = parseInt(localStorage.getItem('lastCheckTime')) || new Date('Feb 09, 2023 20:43:33').getTime();
 
-        const checkReachable = async () => {
-            try {
-                const response = await fetch(`https://${domain}`, { method: 'HEAD', mode: 'no-cors', cache: 'no-cache', redirect: 'follow', referrerPolicy: 'no-referrer' });
-                localStorage.setItem(lastReachableKey, Date.now().toString());
-                return response.status === 200;
-            } catch (error) {
-                return false;
+        async function isWebsiteUp(url) {
+            const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
+            const apiUrl = `https://isitup.org/${url.replace('https://', '').replace('http://', '')}.json`;
+            const response = await fetch(proxyUrl + apiUrl);
+            const json = await response.json();
+            const currentTime = new Date().getTime();
+            const lastCheckTime = new Date(customLastCheckTime).toISOString();
+            const isUp = json.status_code === 1;
+            customLastCheckTime = isUp ? currentTime : customLastCheckTime;
+            localStorage.setItem('lastCheckTime', customLastCheckTime);
+            if (isUp) {
+                localStorage.setItem(url, currentTime);
             }
-        };
-
-        const getLastReachableTime = () => {
-            const lastReachable = localStorage.getItem(lastReachableKey);
-            return customLastReachable ? new Date(customLastReachable).toLocaleString() : (lastReachable ? new Date(parseInt(lastReachable)).toLocaleString() : 'Unknown');
-        };
+            return {
+                isUp,
+                lastCheckTime,
+                customLastCheckTime: new Date(parseInt(customLastCheckTime)).toISOString(),
+            };
+        }
 
         setInterval(() => {
-            checkReachable().then((reachable) => {
-                if (reachable) {
-                    console.log(`${domain} is reachable. Last reachable time: ${getLastReachableTime()}`);
-
-                    window.setTimeout(function () {
-                        // Move to a new location or you can do something else
-                        window.location.href = "./justbaddream.html";
-                    }, 3500);
-                } else {
-                    console.log(`${domain} is not reachable. Last reachable time: ${getLastReachableTime()}`);
+            isWebsiteUp('https://kztimerglobal.com').then(result => {
+                // console.log('Is website up?', result.isUp);
+                // console.log('Custom last check time:', result.customLastCheckTime);
+                if (result.isUp) {
+                    // Move to a new location or you can do something else
+                    window.location.href = "./justbaddream.html";
                 }
             });
-        }, 30000);
+        }, 4000);
 
-        let startDate = new Date(getLastReachableTime()).getTime();
+
         let x = setInterval(function () {
+            let startDate = new Date(parseInt(customLastCheckTime)).getTime();
             let now = new Date().getTime();
             let distance = now - startDate;
             let days = Math.floor(distance / (1000 * 60 * 60 * 24));
@@ -157,12 +156,6 @@
             $('map').imageMapResize();
         });
 
-        // if (true) {
-        //     window.setTimeout(function () {
-        //         // Move to a new location or you can do something else
-        //         window.location.href = "./justbaddream.html";
-        //     }, 3500);
-        // }
     </script>
 
 </body>
