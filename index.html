@@ -137,16 +137,17 @@
             timeElement.innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
         };
 
-        setInterval(() => {
-            isWebsiteUp('https://kztimerglobal.com').then((result) => {
-                // console.log('Is website up?', result.isUp);
-                // console.log('Custom last check time:', result.customLastCheckTime);
-                if (result.isUp) {
-                    // Move to a new location or you can do something else
+        isWebsiteUp('https://kztimerglobal.com').then((result) => {
+            // console.log('Is website up?', result.isUp);
+            // console.log('Custom last check time:', result.customLastCheckTime);
+            if (result.isUp) {
+                // Move to a new location or you can do something else
+                setTimeout(function () {
                     window.location.href = './justbaddream.html';
-                }
-            });
-        }, 15000);
+                }, 4000);
+
+            }
+        });
 
         setInterval(updateTimer, 1000);
 
