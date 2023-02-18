@@ -99,7 +99,42 @@
 
 
     <script>
-        let startDate = new Date("Feb 09, 2023 20:43:33").getTime();
+        const domain = 'kztimerglobal.com';
+        const timeout = 5000; // 5 seconds
+        const lastReachableKey = `${domain}_lastReachable`;
+        const customLastReachable = new Date('Feb 09, 2023 20:43:33').getTime();
+
+        const checkReachable = async () => {
+            try {
+                const response = await fetch(`https://${domain}`, { method: 'HEAD', mode: 'no-cors', cache: 'no-cache', redirect: 'follow', referrerPolicy: 'no-referrer' });
+                localStorage.setItem(lastReachableKey, Date.now().toString());
+                return response.status === 200;
+            } catch (error) {
+                return false;
+            }
+        };
+
+        const getLastReachableTime = () => {
+            const lastReachable = localStorage.getItem(lastReachableKey);
+            return customLastReachable ? new Date(customLastReachable).toLocaleString() : (lastReachable ? new Date(parseInt(lastReachable)).toLocaleString() : 'Unknown');
+        };
+
+        setInterval(() => {
+            checkReachable().then((reachable) => {
+                if (reachable) {
+                    console.log(`${domain} is reachable. Last reachable time: ${getLastReachableTime()}`);
+
+                    window.setTimeout(function () {
+                        // Move to a new location or you can do something else
+                        window.location.href = "./justbaddream.html";
+                    }, 3500);
+                } else {
+                    console.log(`${domain} is not reachable. Last reachable time: ${getLastReachableTime()}`);
+                }
+            });
+        }, 30000);
+
+        let startDate = new Date(getLastReachableTime()).getTime();
         let x = setInterval(function () {
             let now = new Date().getTime();
             let distance = now - startDate;
@@ -110,7 +145,6 @@
             document.getElementById("time").innerHTML = days + "d " + hours + "h "
                 + minutes + "m " + seconds + "s ";
         }, 1000);
-
 
         let audio = new Audio("sound/ohnonono.mp3");
 
@@ -123,9 +157,7 @@
             $('map').imageMapResize();
         });
 
-
         // if (true) {
-        //     // Your application has indicated there's an error
         //     window.setTimeout(function () {
         //         // Move to a new location or you can do something else
         //         window.location.href = "./justbaddream.html";
