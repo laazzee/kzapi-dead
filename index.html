@@ -162,6 +162,7 @@
         //     audio.play();
         // }
 
+        let currentMemeSound = null;
         function playRandomMemeSound() {
             const memeSounds = [
                 "sound/honk.mp3",
@@ -172,6 +173,10 @@
             ];
             const soundNumber = Math.floor(Math.random() * memeSounds.length);
             const audio = new Audio(memeSounds[soundNumber]);
+            if (currentMemeSound) {
+                currentMemeSound.pause();
+            }
+            currentMemeSound = audio;
             audio.volume = 0.8;
             audio.play();
         }
