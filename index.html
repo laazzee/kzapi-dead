@@ -90,7 +90,7 @@
     <div id="main">
         <img id="pepe" src="img/pepeclown.png" usemap="#nose">
         <map name="nose">
-            <area shape="circle" coords="1388,1368,200" onclick="pepeLaught()" alt="secret :D">
+            <area shape="circle" coords="1388,1368,200" onclick="playRandomMemeSound()" alt="secret :D">
         </map>
         <div id="msg">KZ API<br>down for</div>
         <div id="time"></div>
@@ -156,8 +156,22 @@
 
         setInterval(updateTimer, 1000);
 
-        function pepeLaught() {
-            let audio = new Audio("sound/ohnonono.mp3");
+        // function pepeLaught() {
+        //     let audio = new Audio("sound/ohnonono.mp3");
+        //     audio.volume = 0.8;
+        //     audio.play();
+        // }
+
+        function playRandomMemeSound() {
+            const memeSounds = [
+                "sound/honk.mp3",
+                "sound/ohnonono.mp3",
+                "sound/tf_nemesis.mp3",
+                "sound/meme-de-creditos-finales.mp3",
+                "sound/saad.mp3"
+            ];
+            const soundNumber = Math.floor(Math.random() * memeSounds.length);
+            const audio = new Audio(memeSounds[soundNumber]);
             audio.volume = 0.8;
             audio.play();
         }
