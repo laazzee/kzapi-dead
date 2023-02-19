@@ -16,7 +16,7 @@
     <link rel="icon" type="image/png" sizes="32x32" href="img/favicon-32x32.png?">
     <link rel="icon" type="image/png" sizes="96x96" href="img/favicon-96x96.png?">
     <link rel="icon" type="image/png" sizes="16x16" href="img/favicon-16x16.png?">
-    <link rel="manifest" href="img/manifest.json">
+    <!-- <link rel="manifest" href="img/manifest.json"> -->
     <meta name="msapplication-TileColor" content="#ffffff">
     <meta name="msapplication-TileImage" content="img/ms-icon-144x144.png?">
     <meta name="theme-color" content="#ffffff">
@@ -95,21 +95,24 @@
         <div id="msg">KZ API<br>down for</div>
         <div id="time"></div>
     </div>
-
-
     <script>
-        // Checking if website is reachable
+        let q;
+        function callMeBaby(data) {
+            return q = data;
+        }
+        let s = document.createElement("script");
+        s.type = "text/javascript";
+
         const customLastCheckTime = parseInt(localStorage.getItem('lastCheckTime')) || new Date('Feb 09, 2023 20:43:33').getTime();
+
+        // Checking if website is reachabl
         const isWebsiteUp = async (url) => {
-            const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
-            const apiUrl = `https://isitup.org/${url.replace(/^(https?:\/\/)/g, '')}.json`;
             try {
-                const response = await fetch(proxyUrl + apiUrl);
-                const json = await response.json();
                 const currentTime = new Date().getTime();
                 const lastCheckTime = new Date(customLastCheckTime).toISOString();
-                const isUp = json.status_code === 1;
+                const isUp = q.status_code === 1;
                 localStorage.setItem('lastCheckTime', isUp ? currentTime : customLastCheckTime);
+
                 if (isUp) {
                     localStorage.setItem(url, currentTime);
                 }
@@ -119,10 +122,29 @@
                     customLastCheckTime: new Date(customLastCheckTime).toISOString(),
                 };
             } catch (err) {
-                console.error(`Error checking ${url}: ${err}`);
+                // console.error(`Error checking ${url}: ${err}`);
                 return { isUp: false };
             }
         };
+
+
+        function checkWebsite(param) {
+            // Adding callback src
+            s.src = `https://isitup.org/${param.replace(/^(https?:\/\/)/g, '')}.json?callback=callMeBaby`;
+            // Append the script element to the head of the document
+            document.head.appendChild(s);
+
+            isWebsiteUp(param).then((result) => {
+                if (result.isUp == true) {
+                    window.location.href = './justbaddream.html';
+                } else {
+                    // Call the function again after a delay 
+                    setTimeout(() => {
+                        checkWebsite(param);
+                    }, 4000);
+                }
+            });
+        }
 
         // Timer
         const timeElement = document.getElementById('time');
@@ -137,30 +159,11 @@
             timeElement.innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
         };
 
-        function checkWebsite() {
-            isWebsiteUp('https://kztimerglobal.com').then((result) => {
-                if (result.isUp == true) {
-                    // Redirect to justbaddream.html after 4 seconds
-                    setTimeout(() => {
-                        window.location.href = './justbaddream.html';
-                    }, 4000);
-                } else {
-                    // Call the function again after a delay of 60 seconds
-                    setTimeout(checkWebsite, 60000);
-                }
-            });
-        }
-
         // Call the checkWebsite function to start the process
-        checkWebsite();
+        checkWebsite('https://kztimerglobal.com');
 
+        // Update timer each second
         setInterval(updateTimer, 1000);
-
-        // function pepeLaught() {
-        //     let audio = new Audio("sound/ohnonono.mp3");
-        //     audio.volume = 0.8;
-        //     audio.play();
-        // }
 
         let currentMemeSound = null;
         function playRandomMemeSound() {
