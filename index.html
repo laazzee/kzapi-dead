@@ -108,7 +108,7 @@
             try {
                 const currentTime = new Date().getTime();
                 const lastCheckTime = new Date(customLastCheckTime).toISOString();
-                const isUp = response && response.status_code === 1; // check if q is defined before accessing status_code
+                const isUp = response && response.status_code === 1; // check if response is defined before accessing status_code
                 localStorage.setItem('lastCheckTime', isUp ? currentTime : customLastCheckTime);
 
                 if (isUp) {
@@ -125,7 +125,7 @@
             }
         };
 
-        function checkWebsite(param) {
+        async function checkWebsite(param) {
             // Adding callback src
             const url = `https://isitup.org/${param.replace(/^(https?:\/\/)/g, '')}.json?callback=bypassCORS`;
             const s = document.createElement("script");
@@ -135,17 +135,17 @@
             // Append the script element to the head of the document
             document.head.appendChild(s);
 
-            isWebsiteUp(param).then((result) => {
-                if (result.isUp == true) {
-                    window.location.href = './justbaddream.html';
-                } else {
-                    // Call the function again after a delay 
-                    setTimeout(() => {
-                        checkWebsite(param);
-                    }, 4000);
-                }
-            });
+            const result = await isWebsiteUp(param);
+            if (result.isUp == true) {
+                window.location.href = './justbaddream.html';
+            } else {
+                // Call the function again after a delay 
+                setTimeout(() => {
+                    checkWebsite(param);
+                }, 4000);
+            }
         }
+
 
         // Timer
         const timeElement = document.getElementById('time');
