@@ -103,22 +103,29 @@
         }
 
         // Checking if website is reachable
-        const customLastCheckTime = parseInt(localStorage.getItem('lastCheckTime')) || new Date('Feb 09, 2023 20:43:33').getTime();
+        let lastStatus = parseInt(localStorage.getItem('lastStatus')) || null;
+        let lastCheckTime = parseInt(localStorage.getItem('lastCheckTime')) || new Date('Feb 09, 2023 20:43:33').getTime();
 
         const isWebsiteUp = async (url) => {
             try {
                 const currentTime = new Date().getTime();
-                const lastCheckTime = new Date(customLastCheckTime).toISOString();
-                const isUp = response && response.status_code === 1; // check if response is defined before accessing status_code
-                localStorage.setItem('lastCheckTime', isUp ? currentTime : customLastCheckTime);
+                const isUp = response?.status_code === 1;
+                if (lastStatus === null && isUp) {
+                    lastStatus = 1;
+                    lastCheckTime = currentTime;
+                } else if (lastStatus === 1 && isUp) {
 
-                if (isUp) {
-                    localStorage.setItem(url, currentTime);
+                } else if (lastStatus === 1 && !isUp) {
+                    lastStatus = null;
+                    lastCheckTime = currentTime;
                 }
+                localStorage.setItem('lastStatus', lastStatus);
+                localStorage.setItem('lastCheckTime', lastCheckTime);
+                localStorage.setItem('Date', new Date(lastCheckTime));
                 return {
                     isUp,
+                    lastStatus,
                     lastCheckTime,
-                    customLastCheckTime: new Date(customLastCheckTime).toISOString(),
                 };
             } catch (err) {
                 console.error(`Error checking ${url}: ${err}`);
@@ -138,7 +145,8 @@
 
             const result = await isWebsiteUp(param);
             if (result.isUp == true) {
-                window.location.href = './justbaddream.html';
+                // window.location.href = './justbaddream.html';
+                console.log('okok')
             } else {
                 // Call the function again after a delay 
                 setTimeout(() => {
@@ -147,11 +155,10 @@
             }
         }
 
-
         // Timer
         const timeElement = document.getElementById('time');
         const updateTimer = () => {
-            const startDate = new Date(customLastCheckTime).getTime();
+            const startDate = new Date(lastCheckTime).getTime();
             const now = new Date().getTime();
             const distance = now - startDate;
             const days = Math.floor(distance / (1000 * 60 * 60 * 24));
@@ -163,7 +170,9 @@
 
         // Call the checkWebsite function to start the process
         // using kztimerglobal server ip instead of domain
+        // checkWebsite('kztimerglobal.com');
         checkWebsite('192.95.54.4');
+        // checkWebsite('test.loc');
 
         // Update timer each second
         setInterval(updateTimer, 1000);
