@@ -95,6 +95,7 @@
         <div id="msg">KZ API<br>down for</div>
         <div id="time"></div>
     </div>
+
     <script>
         let response;
         function bypassCORS(data) {
@@ -161,7 +162,8 @@
         };
 
         // Call the checkWebsite function to start the process
-        checkWebsite('https://kztimerglobal.com');
+        // using kztimerglobal server ip instead of domain
+        checkWebsite('192.95.54.4');
 
         // Update timer each second
         setInterval(updateTimer, 1000);
